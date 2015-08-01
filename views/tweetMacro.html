@@ -1,0 +1,7 @@
+{% macro showTweet(tweet) %}
+<div id="{{tweet.id}}">
+   <a href="/users/{{tweet.name}}"><b>{{tweet.name}}</b></a>
+   <br>
+   <pre>{{tweet.text}}</pre>
+</div>
+{% endmacro %}

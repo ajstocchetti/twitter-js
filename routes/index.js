@@ -34,6 +34,9 @@ module.exports = function(io) {
       var newTweetID = tweetBank.add(name, text).toString();
       var newTweet = tweetBank.find( { id: newTweetID } );
 
+      var newDiv = express.render('tweetMacro', newTweet[0]);
+      console.log(newDiv);
+
       // let everybody else know that there are new tweets
       io.sockets.emit('new_tweet', newTweet[0]);
 

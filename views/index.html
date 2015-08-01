@@ -32,13 +32,10 @@
     <div class="col-md-9" id="theTweets">
 
       <!-- display tweets here -->
+      {% include "./tweetMacro.html" %}
       <h3>{{title}}</h3>
       {% for tweet in tweets %}
-        <div id="{{tweet.id}}">
-           <a href="/users/{{tweet.name}}"><b>{{tweet.name}}</b></a>
-           <br>
-           <pre>{{tweet.text}}</pre>
-        </div>
+         {{ showTweet(tweet) }}
       {% endfor %}
 
     </div>
