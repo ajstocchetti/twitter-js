@@ -1,24 +1,45 @@
 var express = require('express');
-var router = express.Router();
-// could use one line instead: var router = require('express').Router();
 var tweetBank = require('../tweetBank');
 
-router.get('/', function (req, res) {
-  var tweets = tweetBank.list();
-  res.render( 'index', { title: 'Twitter.js', tweets: tweets } );
-});
+//module.exports = router;
+module.exports = function(io) {
+   var router = express.Router();
 
-router.get('/users/:name', function(req, res) {
-  var name = req.params.name;
-  var list = tweetBank.find( {name: name} );
-  res.render( 'index', { title: 'Twitter.js - Posts by '+name, tweets: list } );
-});
+   router.get('/', function (req, res) {
+     var tweets = tweetBank.list();
+     res.render( 'index', { title: 'Twitter.js', tweets: tweets, showForm: true } );
+   });
 
-router.get('/users/:name/tweets/:tweetID', function(req, res) {
-   var name = req.params.name;
-   var tweetID = req.params.tweetID;
-   var tweet = tweetBank.find( { name: name, id: tweetID} );
-   res.render( 'index', { title: "Twitter.js - Post #"+tweetID, tweets: tweet } );
-});
+   router.get('/users/:name', function(req, res) {
+     var name = req.params.name;
+     var list = tweetBank.find( {name: name} );
+     res.render( 'index',
+                  { title: 'Twitter.js - Posts by '+name,
+                  tweets: list,
+                  showForm:true,
+                  nameForm: true,
+                  name: name } );
+   });
 
-module.exports = router;
+   router.get('/users/:name/tweets/:tweetID', function(req, res) {
+      var name = req.params.name;
+      var tweetID = req.params.tweetID;
+      var tweet = tweetBank.find( { name: name, id: tweetID} );
+      res.render( 'index', { title: "Twitter.js - Post #"+tweetID, tweets: tweet } );
+   });
+
+   router.post('/submit', function(req, res) {
+      var name = req.body.name;
+      var text = req.body.text;
+      var newTweetID = tweetBank.add(name, text).toString();
+      var newTweet = tweetBank.find( { id: newTweetID } );
+
+      // let everybody else know that there are new tweets
+      io.sockets.emit('new_tweet', newTweet[0]);
+
+      // finally send the poster somewhere
+      res.redirect('/');
+   });
+
+   return router;
+}

@@ -4,8 +4,9 @@ var data = [];
 var numTweets = 0;
 
 var add = function (name, text) {
-  numTweets++;
-  data.push({ name: name, text: text, id: numTweets.toString() });
+  var tweetID = ++numTweets;
+  data.push({ name: name, text: text, id: tweetID.toString() });
+  return tweetID;
 };
 
 var list = function () {
