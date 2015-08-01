@@ -1,9 +1,11 @@
 var _ = require('underscore');
 
 var data = [];
+var numTweets = 0;
 
 var add = function (name, text) {
-  data.push({ name: name, text: text });
+  numTweets++;
+  data.push({ name: name, text: text, id: numTweets.toString() });
 };
 
 var list = function () {
@@ -17,7 +19,7 @@ var find = function (properties) {
 module.exports = { add: add, list: list, find: find };
 
 
-
+module.exports.add("Andy", "Yay! Tweet #1");
 
 var randArrayEl = function(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
@@ -35,5 +37,8 @@ var getFakeTweet = function() {
 };
 
 for(var i=0; i<10; i++) {
-  module.exports.add( getFakeName(), getFakeTweet() );
+   var fakeName = getFakeName();
+  module.exports.add( fakeName, getFakeTweet() );
+  module.exports.add( fakeName, getFakeTweet() );
+  module.exports.add( fakeName, getFakeTweet() );
 }
