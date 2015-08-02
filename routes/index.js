@@ -34,11 +34,10 @@ module.exports = function(io) {
       var newTweetID = tweetBank.add(name, text).toString();
       var newTweet = tweetBank.find( { id: newTweetID } );
 
-      var newDiv = express.render('tweetMacro', newTweet[0]);
-      console.log(newDiv);
+      var newDiv = require('swig').renderFile('./views/tweetUpdateRender.html', { tweet: newTweet[0] });
 
       // let everybody else know that there are new tweets
-      io.sockets.emit('new_tweet', newTweet[0]);
+      io.sockets.emit('new_tweet', newDiv);
 
       // finally send the poster somewhere
       res.redirect('/');
